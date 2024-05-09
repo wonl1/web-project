@@ -31,11 +31,11 @@
 
   <Footer footerType="logo" class="bg-blue-50 text-gray-500">
     <div class="sm:flex sm:items-center sm:justify-between px-20 py-2">
-      <div class="flex items-center justify-start ml-10">
+      <div class="flex items-center justify-center"> <!-- 수정된 부분: justify-center -->
         <FontAwesomeIcon icon={faCamera} size="2x" style="margin-right: 8px;" /> 
         <span class="self-center whitespace-nowrap text-xl font-semibold">Travel Sharing</span>
       </div>
-      <FooterLinkGroup ulClass="flex flex-wrap items-center mb-6 text-sm text-gray-500 sm:mb-0 dark:text-gray-400">
+      <FooterLinkGroup ulClass="flex flex-wrap items-center justify-center mb-6 text-sm text-gray-500 sm:mb-0 dark:text-gray-400"> <!-- 수정된 부분: justify-center -->
         <FooterLink href="/">About</FooterLink>
         <FooterLink href="/">Privacy Policy</FooterLink>
         <FooterLink href="/">Licensing</FooterLink>
@@ -43,6 +43,8 @@
       </FooterLinkGroup>
     </div>
     <hr class="my-6 border-gray-200 sm:mx-auto dark:border-gray-700 lg:my-8" />
-    <FooterCopyright href="/" by="Travel Sharing™" />
+    <div class="text-center"> 
+      <FooterCopyright href="/" by="Travel Sharing™" />
+    </div>
   </Footer>
-  </div>
+</div>
