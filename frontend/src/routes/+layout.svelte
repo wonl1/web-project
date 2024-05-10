@@ -16,10 +16,8 @@
       <NavHamburger />
       <NavUl>
         <NavLi href="/">Home</NavLi>
-        <NavLi href="/지역">지역</NavLi>
-        <NavLi href="/계절">계절</NavLi>
-        <NavLi href="/테마">테마</NavLi>
-        <NavLi href="/이벤트">이벤트</NavLi>
+        <NavLi href="/category">Category</NavLi>
+        <NavLi href="/event">Event</NavLi>
       </NavUl>
     </NavContainer>
   </Navbar>
