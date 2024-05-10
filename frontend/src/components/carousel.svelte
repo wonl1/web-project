@@ -29,7 +29,7 @@
       </div>
       <div class="dots">
         {#each slides as _, j}
-            <button class="dot {j === i ? 'active' : ''}" on:click={() => goToSlide(j)} on:keydown={(event) => {if (event.key === 'Enter') goToSlide(j)}} role="button" tabindex="0"></button>
+            <button class="dot {j === i ? 'active' : ''}" on:click={() => goToSlide(j)} on:keydown={(event) => {if (event.key === 'Enter') goToSlide(j)}} tabindex="0"></button>
         {/each}
       </div>
     </div>
