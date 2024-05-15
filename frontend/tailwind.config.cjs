@@ -8,19 +8,21 @@ const config = {
   theme: {
     extend: {
       colors: {
-        // flowbite-svelte
-        primary: {
-          50: '#F0F9FF',
-          100: '#E0F2FE',
-          200: '#BAE6FD',
-          300: '#7DD3FC',
-          400: '#38BDF8',
-          500: '#0EA5E9',
-          600: '#0284C7',
-          700: '#0369A1',
-          800: '#075985',
-          900: '#0C4A6E',
-        }
+        darkblue: {
+          50: '#e4e6ec',
+          100: '#bcc2d4',
+          200: '#9299b8',
+          300: '#67709c',
+          400: '#4a547c',
+          500: '#1A2039',  // base color
+          600: '#121832',
+          700: '#0d122a',
+          800: '#090c22',
+          900: '#050617',
+        },
+        lightyellow: {
+          100: '#FFFFE0',  // very light yellow
+        },
       }
     }
   }
