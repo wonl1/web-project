@@ -1,5 +1,5 @@
 <script>
-	import { Gallery, Button } from 'flowbite-svelte';
+	import { Button } from 'flowbite-svelte';
 	import { goto } from '$app/navigation';
   
 	const images = [
@@ -23,7 +23,7 @@
   </script>
   
   <div class="flex items-center justify-center py-4 md:py-8 flex-wrap gap-3 mb-3 mx-auto">
-	<Button pill size="xl" outline>All categories</Button>
+	<Button pill size="xl" color="alternative">All categories</Button>
 	<Button pill size="xl" color="alternative">Location</Button>
 	<Button pill size="xl" color="alternative">Season</Button>
 	<Button pill size="xl" color="alternative">Theme</Button>
