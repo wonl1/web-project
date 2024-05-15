@@ -1,8 +1,11 @@
 <script>
-	import { Gallery, Button } from 'flowbite-svelte';
-	import { goto } from '$app/navigation';
+    import { onMount } from 'svelte';
+    import { page } from '$app/stores';
   
-	const images = [
+    let imageId;
+    let image;
+  
+    const images = [
 	  { id: 'erbology', alt: 'erbology', src: 'https://flowbite.s3.amazonaws.com/docs/gallery/square/image.jpg' },
 	  { id: 'shoes', alt: 'shoes', src: 'https://flowbite.s3.amazonaws.com/docs/gallery/square/image-1.jpg' },
 	  { id: 'small bag', alt: 'small bag', src: 'https://flowbite.s3.amazonaws.com/docs/gallery/square/image-2.jpg' },
@@ -16,24 +19,27 @@
 	  { id: 'playstation',alt: 'playstation', src: 'https://flowbite.s3.amazonaws.com/docs/gallery/square/image-10.jpg' },
 	  { id: 'bag',alt: 'bag', src: 'https://flowbite.s3.amazonaws.com/docs/gallery/square/image-11.jpg' }
 	];
+    
+    $: {
+      imageId = $page.params.id;
+      image = images.find(img => img.id === imageId);
+    }
   
-	function handleImageClick(id) {
-	  goto(`/image/${id}`);
-	}
+    onMount(() => {
+      if (!image) {
+        // 이미지를 찾을 수 없는 경우 처리
+        console.error('Image not found');
+      }
+    });
   </script>
   
-  <div class="flex items-center justify-center py-4 md:py-8 flex-wrap gap-3 mb-3 mx-auto">
-	<Button pill size="xl" outline>All categories</Button>
-	<Button pill size="xl" color="alternative">Location</Button>
-	<Button pill size="xl" color="alternative">Season</Button>
-	<Button pill size="xl" color="alternative">Theme</Button>
-  </div>
+  {#if image}
+    <div class="image-details">
+      <h1>{image.alt}</h1>
+      <img src={image.src} alt={image.alt} />
+      <!-- 이미지에 대한 세부 정보를 더 추가합니다 -->
+    </div>
+  {:else}
+    <p>Loading...</p>
+  {/if}
   
-  <div class="gallery grid gap-4 grid-cols-2 md:grid-cols-3">
-	{#each images as image}
-	  <a href={`/image/${image.id}`} on:click|preventDefault={() => handleImageClick(image.id)}>
-		<img src={image.src} alt={image.alt} class="cursor-pointer" />
-	  </a>
-	{/each}
-  </div>
-
