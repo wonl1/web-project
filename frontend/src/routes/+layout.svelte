@@ -7,16 +7,16 @@
 </script>
 
 <div class="flex flex-col min-h-screen">
-  <Navbar class="bg-darkblue-600 rounded-t-lg">
+  <Navbar class="bg-darkblue-600 rounded-t-lg flex items-center" style="height: 100px;">
     <NavBrand href="/">
       <FontAwesomeIcon icon={faCamera} size="2x" style="margin-right: 8px;" class="text-lightyellow-100" /> 
-      <span class="self-center whitespace-nowrap text-xl font-semibold text-lightyellow-100">Travel Sharing</span>
+      <span class="self-center whitespace-nowrap text-2xl font-semibold text-lightyellow-100">Travel Sharing</span>
     </NavBrand>
-    <NavHamburger class="text-lightyellow-100 hover:bg-darkblue-600"/>
+    <NavHamburger class="text-lightyellow-100 hover:text-lightyellow-50 hover:bg-darkblue-600"/>
     <NavUl>
-      <NavLi href="/" class="text-lightyellow-100 bg-darkblue-600 hover:bg-darkblue-500">Home</NavLi>
-      <NavLi href="/category" class="text-lightyellow-100 bg-darkblue-600 hover:bg-darkblue-500">Category</NavLi>
-      <NavLi href="/event" class="text-lightyellow-100 bg-darkblue-600 hover:bg-darkblue-500">Event</NavLi>
+      <NavLi href="/" class="text-lightyellow-100 hover:text-lightyellow-50 bg-darkblue-600 hover:bg-darkblue-500 font-bold">Home</NavLi>
+      <NavLi href="/category" class="text-lightyellow-100 hover:text-lightyellow-50 bg-darkblue-600 hover:bg-darkblue-500 font-bold">Category</NavLi>
+      <NavLi href="/event" class="text-lightyellow-100 hover:text-lightyellow-50 bg-darkblue-600 hover:bg-darkblue-500 font-bold">Event</NavLi>
     </NavUl>
   </Navbar>
   <div class="px-2 sm:px-4 flex-grow">
