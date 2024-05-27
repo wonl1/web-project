@@ -67,7 +67,7 @@
 	  { id: 'Vorarlberg, Austria',alt: 'Vorarlberg, Austria', src: 'https://hips.hearstapps.com/hmg-prod/images/vorarlberg-austria-gettyimages-1655139358.jpg?crop=1xw:1xh;center,top&resize=980:*' },
 	  { id: 'Whitsunday Islands, Queensland, Australia',alt: 'Whitsunday Islands, Queensland, Australia', src: 'https://hips.hearstapps.com/hmg-prod/images/whitsunday-islands-gettyimages-1655139358.jpg?crop=1xw:1xh;center,top&resize=980:*' },
 	];
-  
+
   $: {
     imageId = $page.params.id;
     image = images.find(img => img.id === imageId);
@@ -88,7 +88,7 @@
 {#if image}
   <div class="image-details">
     <h1>{image.alt}</h1>
-    <img src={image.src} alt={image.alt} style="width: 700px;" />
+    <img src={image.src} alt={image.alt} class="image-size" />
     <!-- Add more details about the image here -->
   </div>
 {:else}
@@ -98,3 +98,11 @@
 <Button on:click={navigateToUploadPage} class="font-bold bg-darkblue-600 text-lightyellow-100 hover:text-lightyellow-50 hover:bg-darkblue-500">
   <FontAwesomeIcon icon={faUpload} class="w-5 h-5 me-2" /> Upload
 </Button>
+
+<style>
+  .image-size {
+    width: 100%;
+    max-width: 500px; /* Set the maximum width for the image */
+    height: 600px; /* Maintain the aspect ratio of the image */
+  }
+</style>
