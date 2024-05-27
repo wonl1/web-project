@@ -87,9 +87,11 @@
 
 {#if image}
   <div class="image-details">
-    <h1>{image.alt}</h1>
-    <img src={image.src} alt={image.alt} class="image-size" />
-    <!-- Add more details about the image here -->
+    <div class="image-text">
+      <h1>{image.alt}</h1>
+      <!-- Add more details about the image here -->
+    </div>
+    <img src={image.src} alt={image.alt} class="image-size align-right" />
   </div>
 {:else}
   <p>Loading...</p>
@@ -100,9 +102,25 @@
 </Button>
 
 <style>
+  .image-details {
+    display: flex;
+    align-items: flex-start; /* Align text with the top of the image */
+    margin-top: 2rem; /* Add space between the navbar and the image */
+    justify-content: space-between; /* Push the image to the right */
+  }
+
+  .image-text {
+    margin-right: 1rem; /* Space between text and image */
+  }
+
+  h1 {
+    font-size: 2rem; /* Increase font size */
+    font-weight: bold; /* Make the text bold */
+  }
+
   .image-size {
     width: 100%;
-    max-width: 500px; /* Set the maximum width for the image */
-    height: 600px; /* Maintain the aspect ratio of the image */
+    max-width: 600px; /* Set the maximum width for the image */
+    height: 700px; /* Maintain the aspect ratio of the image */
   }
 </style>
