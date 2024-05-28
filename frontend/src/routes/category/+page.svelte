@@ -61,10 +61,8 @@
   </script>
   
   <div class="flex justify-center py-4 md:py-8 flex-wrap gap-3 mb-3 mx-auto">
-	<Button pill size="xl" color="alternative">All categories</Button>
-	<Button pill size="xl" color="alternative">Location</Button>
-	<Button pill size="xl" color="alternative">Season</Button>
-	<Button pill size="xl" color="alternative">Theme</Button>
+	<Button style="width: 200px; height: 50px;" pill size="xl" color="alternative">All categories</Button>
+	<Button style="width: 200px; height: 50px;" pill size="xl" color="alternative">Location</Button>
   </div>
   
   <div class="gallery grid gap-4 grid-cols-2 md:grid-cols-4">
