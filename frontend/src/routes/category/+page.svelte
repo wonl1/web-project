@@ -69,11 +69,14 @@
   
   <div class="gallery grid gap-4 grid-cols-2 md:grid-cols-4">
 	{#each images as image}
-	  <a href={`/image/${image.id}`} on:click|preventDefault={() => handleImageClick(image.id)}>
-		<img src={image.src} alt={image.alt} class="cursor-pointer w-full h-full object-cover" />
+	  <a href={`/image/${image.id}`} on:click|preventDefault={() => handleImageClick(image.id)} class="relative group">
+		<img src={image.src} alt={image.alt} class="cursor-pointer w-full h-full object-cover transition-transform duration-300 transform group-hover:scale-105" />
+		<div class="caption absolute inset-0 bg-black bg-opacity-60 flex items-center justify-center text-white text-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+		  <span class="text-lg font-semibold">{image.alt}</span>
+		</div>
 	  </a>
 	{/each}
-  </div>  
+  </div>
   
   <style>
 	.gallery {
@@ -83,5 +86,29 @@
 	.gallery img {
 	  aspect-ratio: 1 / 1.2;
 	}
-  </style>
   
+	.relative {
+	  position: relative;
+	}
+  
+	.caption {
+	  position: absolute;
+	  inset: 0;
+	  background: rgba(0, 0, 0, 0.6);
+	  display: flex;
+	  align-items: center;
+	  justify-content: center;
+	  color: white;
+	  text-align: center;
+	  opacity: 0;
+	  transition: opacity 0.3s;
+	}
+  
+	.group:hover .caption {
+	  opacity: 1;
+	}
+  
+	.group:hover img {
+	  transform: scale(1.05);
+	}
+  </style>

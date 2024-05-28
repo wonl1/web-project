@@ -71,7 +71,7 @@
 ];
 
 
-  $: {
+$: {
     imageId = $page.params.id;
     image = images.find(img => img.id === imageId);
   }
@@ -105,45 +105,55 @@
   <div class="image-details">
     <div class="image-text">
       <h1>{image.alt}</h1>
-      <!-- 여기에 더 많은 이미지 세부 정보를 추가하세요. -->
+      <!-- Add more image details here if needed -->
     </div>
-    <img src={image.src} alt={image.alt} class="image-size align-right" />
+    <div class="image-and-map">
+      <img src={image.src} alt={image.alt} class="image-size" />
+      <div id="map" class="map"></div> <!-- Map is placed here -->
+    </div>
   </div>
-  <div id="map" class="map"></div> <!-- 이 위치에 지도를 배치합니다. -->
 {:else}
   <p>Loading...</p>
 {/if}
 
-<Button on:click={navigateToUploadPage} class="font-bold bg-darkblue-600 text-lightyellow-100 hover:text-lightyellow-50 hover:bg-darkblue-500">
+<Button on:click={navigateToUploadPage} class="font-bold bg-darkblue-600 text-lightyellow-100 hover:text-lightyellow-50 hover:bg-darkblue-500 mt-4">
   <FontAwesomeIcon icon={faUpload} class="w-5 h-5 me-2" /> Upload
 </Button>
 
 <style>
   .image-details {
     display: flex;
-    align-items: flex-start; /* 이미지의 상단에 텍스트를 정렬합니다. */
-    margin-top: 2rem; /* 네비게이션 바와 이미지 사이에 공간을 추가합니다. */
-    justify-content: space-between; /* 이미지를 오른쪽으로 밀어냅니다. */
+    flex-direction: column; /* Stack elements vertically */
+    align-items: flex-start; /* Align text to the left */
+    margin-top: 2rem; /* Add space between navigation and content */
   }
 
   .image-text {
-    margin-right: 1rem; /* 텍스트와 이미지 사이에 공간을 추가합니다. */
+    margin-bottom: 1rem; /* Add space between text and image */
   }
 
   h1 {
-    font-size: 2rem; /* 글꼴 크기를 증가시킵니다. */
-    font-weight: bold; /* 텍스트를 굵게 만듭니다. */
+    font-size: 2rem; /* Increase font size */
+    font-weight: bold; /* Bold text */
+  }
+
+  .image-and-map {
+    display: flex;
+    align-items: flex-start; /* Align the image and map to the top */
+    gap: 1rem; /* Add space between the image and the map */
+    width: 100%; /* Ensure the container takes the full width */
   }
 
   .image-size {
-    width: 100%;
-    max-width: 600px; /* 이미지의 최대 너비를 설정합니다. */
-    height: 700px; /* 이미지의 종횡비를 유지합니다. */
+    flex: 1; /* Allow the image to take up available space */
+    height: 700px; /* Set the height of the image */
+    object-fit: cover; /* Ensure the image covers the allocated space */
   }
 
   .map {
-    width: 50%; /* 지도의 너비를 100%로 설정하여 이미지와 동일한 너비를 갖게 합니다. */
-    height: 300px; /* 지도의 높이를 설정합니다. */
-    margin-top: 1rem; /* 이미지와 지도 사이의 간격을 조정합니다. */
+    flex: 1; /* Allow the map to take up the remaining space */
+    height: 300px; /* Set height for the map to match the image */
+    min-width: 300px; /* Ensure the map has a minimum width */
+    margin-top: 25rem
   }
 </style>
