@@ -53,11 +53,13 @@ $: {
   <div class="image-details">
     <div class="image-text">
       <h1>{image.alt}</h1>
-      <!-- Add more image details here if needed -->
     </div>
     <div class="image-and-map">
       <img src={image.src} alt={image.alt} class="image-size" />
-      <div id="map" class="map"></div> <!-- Map is placed here -->
+      <div class="image-description">
+        <p>{image.description}</p> 
+        <div id="map" class="map"></div>
+      </div>   
     </div>
   </div>
 {:else}
@@ -94,14 +96,15 @@ $: {
 
   .image-size {
     flex: 1; /* Allow the image to take up available space */
-    height: 700px; /* Set the height of the image */
+    height: 800px; /* Set the height of the image */
     object-fit: cover; /* Ensure the image covers the allocated space */
   }
 
-  .map {
-    flex: 1; /* Allow the map to take up the remaining space */
-    height: 300px; /* Set height for the map to match the image */
-    min-width: 300px; /* Ensure the map has a minimum width */
-    margin-top: 25rem
-  }
+.map {
+    position: absolute;
+    top: 43.5rem;
+    flex: none;
+    height: 300px;
+    min-width: 700px;
+}
 </style>
