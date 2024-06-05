@@ -8,18 +8,19 @@
   import L from 'leaflet';
   import 'leaflet/dist/leaflet.css';
   import { images } from './images.js';
+  import { P } from 'flowbite-svelte';
 
   /**
    * @type {string}
    */
   let imageId;
+
   /**
-   * @type {{ id: string; alt: string; src: string; lat: number; lng: number; } | undefined}
+   * @type {{ id: string; alt: string; src: string; lat: number; lng: number; description: string; } | undefined}
    */
   let image;
 
-
-$: {
+  $: {
     imageId = $page.params.id;
     image = images.find(img => img.id === imageId);
   }
@@ -54,13 +55,15 @@ $: {
     <div class="image-text">
       <h1>{image.alt}</h1>
     </div>
-    <div class="image-and-map">
+    <div class="image-and-description">
       <img src={image.src} alt={image.alt} class="image-size" />
       <div class="image-description">
-        <p>{image.description}</p> 
-        <div id="map" class="map"></div>
+        <P class="mb-3" color="text-gray-600 dark:text-gray-400" firstupper style="line-height: 1.2;">
+          {@html image.description}
+        </P>
       </div>   
     </div>
+    <div id="map" class="map"></div>
   </div>
 {:else}
   <p>Loading...</p>
@@ -87,10 +90,10 @@ $: {
     font-weight: bold; /* Bold text */
   }
 
-  .image-and-map {
+  .image-and-description {
     display: flex;
-    align-items: flex-start; /* Align the image and map to the top */
-    gap: 1rem; /* Add space between the image and the map */
+    align-items: flex-start; /* Align the image and description to the top */
+    gap: 1rem; /* Add space between the image and the description */
     width: 100%; /* Ensure the container takes the full width */
   }
 
@@ -100,11 +103,14 @@ $: {
     object-fit: cover; /* Ensure the image covers the allocated space */
   }
 
-.map {
-    position: absolute;
-    top: 43.5rem;
-    flex: none;
-    height: 300px;
-    min-width: 700px;
-}
+  .image-description {
+    flex: 1;
+  }
+
+  .map {
+    height: 300px; /* Set the height of the map */
+    min-width: 300px; /* Set the minimum width of the map */
+    width: 100%; /* Ensure the map takes the full width */
+    margin-top: 1rem; /* Add space between the description and the map */
+  }
 </style>
