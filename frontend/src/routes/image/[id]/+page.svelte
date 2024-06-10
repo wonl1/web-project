@@ -5,6 +5,7 @@
   import { Button } from 'flowbite-svelte';
   import { FontAwesomeIcon } from '@fortawesome/svelte-fontawesome';
   import { faUpload, faChevronLeft, faChevronRight } from '@fortawesome/free-solid-svg-icons';
+  import 'leaflet/dist/leaflet.css';
   import { images } from './images.js';
 
   let imageId;
@@ -13,7 +14,7 @@
   let loading = true;
   let errorMessage = '';
   let scrollContainer;
-
+  let L;
 
   const backendImagePath = 'http://127.0.0.1:8007/media/images/';
 
@@ -64,9 +65,8 @@
     }
   }
 
-  async function loadMap() {
-    if (typeof window !== 'undefined' && image) {
-      const L = await import('leaflet');
+  function loadMap() {
+    if (typeof window !== 'undefined' && image && L) {
       const map = L.map('map').setView([image.lat, image.lng], 10);
       L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
         maxZoom: 19,
@@ -77,7 +77,11 @@
     }
   }
 
-  onMount(() => {
+  onMount(async () => {
+    if (typeof window !== 'undefined') {
+      const module = await import('leaflet');
+      L = module.default;
+    }
     if (!image) {
       console.error('이미지를 찾을 수 없습니다.', imageId);
     } else if (!loading) {
