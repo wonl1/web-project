@@ -4,103 +4,177 @@
   import { goto } from '$app/navigation';
   import { Button } from 'flowbite-svelte';
   import { FontAwesomeIcon } from '@fortawesome/svelte-fontawesome';
-  import { faUpload } from '@fortawesome/free-solid-svg-icons';
-  import L from 'leaflet';
-  import 'leaflet/dist/leaflet.css';
+  import { faUpload, faChevronLeft, faChevronRight } from '@fortawesome/free-solid-svg-icons';
   import { images } from './images.js';
-  import { P } from 'flowbite-svelte';
 
-  /**
-   * @type {string}
-   */
   let imageId;
-
-  /**
-   * @type {{ id: string; alt: string; src: string; lat: number; lng: number; description: string; } | undefined}
-   */
   let image;
+  let uploadedImages = []; // List of newly uploaded images
+  let loading = true;
+  let errorMessage = '';
+  let scrollContainer;
+
+  // 이미지 엔드포인트를 백엔드의 경로로 설정합니다.
+  const backendImagePath = 'http://127.0.0.1:8007/media/images/';
 
   $: {
     imageId = $page.params.id;
-    image = images.find(img => img.id === imageId);
+    console.log('imageId:', imageId);
+
+    if (isNaN(parseInt(imageId))) {
+      image = images.find(img => img.id === imageId);
+      loading = false;
+    } else {
+      fetchImage();
+    }
+  }
+
+  async function fetchImage() {
+    try {
+      const response = await fetch(`http://127.0.0.1:8007/api/posts/${imageId}`);
+      if (!response.ok) {
+        throw new Error('이미지 로드 중 오류가 발생했습니다.');
+      }
+      image = await response.json();
+      // 이미지의 경로를 백엔드에서 제공하는 경로로 수정합니다.
+      image.image = `${backendImagePath}${image.image.split('/').pop()}`;
+      loading = false;
+      onMount(() => {
+        loadMap();
+      });
+    } catch (error) {
+      console.error(error);
+      errorMessage = error.message;
+      loading = false;
+    }
+  }
+
+  async function fetchUploadedImages() {
+    try {
+      const response = await fetch(`http://127.0.0.1:8007/api/posts/`);
+      if (!response.ok) {
+        throw new Error('이미지 로드 중 오류가 발생했습니다.');
+      }
+      uploadedImages = await response.json();
+      // 업로드된 이미지의 경로도 백엔드에서 제공하는 경로로 수정합니다.
+      uploadedImages.forEach(uploadedImage => {
+        uploadedImage.image = `${backendImagePath}${uploadedImage.image.split('/').pop()}`;
+      });
+    } catch (error) {
+      console.error(error);
+      errorMessage = error.message;
+    }
+  }
+
+  function loadMap() {
+    import('leaflet').then(L => {
+      const map = L.map('map').setView([image.lat, image.lng], 10);
+      L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        maxZoom: 19,
+      }).addTo(map);
+      L.marker([image.lat, image.lng]).addTo(map)
+        .bindPopup(image.alt)
+        .openPopup();
+    });
   }
 
   onMount(() => {
     if (!image) {
-      // Handle the case where the image is not found
-      console.error('Image not found');
-    } else {
-      // Initialize the map
-      const map = L.map('map').setView([image.lat, image.lng], 10);
-
-      // Add OpenStreetMap tiles
-      L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-        maxZoom: 19,
-      }).addTo(map);
-
-      // Add a marker
-      L.marker([image.lat, image.lng]).addTo(map)
-        .bindPopup(image.alt)
-        .openPopup();
+      console.error('이미지를 찾을 수 없습니다.', imageId);
+    } else if (!loading) {
+      loadMap();
     }
+    fetchUploadedImages();
   });
 
   function navigateToUploadPage() {
-    goto('/upload'); // Replace with the actual path to your upload page
+    goto('/upload');
+  }
+
+  function scrollLeft() {
+    scrollContainer.scrollBy({ left: -300, behavior: 'smooth' });
+  }
+
+  function scrollRight() {
+    scrollContainer.scrollBy({ left: 300, behavior: 'smooth' });
   }
 </script>
 
-{#if image}
+{#if loading}
+  <p>Loading...</p>
+{:else if errorMessage}
+  <p>{errorMessage}</p>
+{:else if image}
   <div class="image-details">
     <div class="image-text">
-      <h1>{image.alt}</h1>
+      <h1>{image.alt || image.title}</h1>
     </div>
     <div class="image-and-description">
-      <img src={image.src} alt={image.alt} class="image-size" />
+      <img src={image.src || image.image} alt={image.alt || image.title} class="image-size" />
       <div class="image-description">
-        <P class="mb-3" color="text-gray-600 dark:text-gray-400" firstupper style="line-height: 1.2;">
+        <p class="mb-3 text-gray-600 dark:text-gray-400" style="line-height: 1.2;">
           {@html image.description}
-        </P>
-      </div>   
+        </p>
+      </div>
     </div>
     <div id="map" class="map"></div>
   </div>
-{:else}
-  <p>Loading...</p>
 {/if}
 
 <Button on:click={navigateToUploadPage} class="font-bold bg-darkblue-600 text-lightyellow-100 hover:text-lightyellow-50 hover:bg-darkblue-500 mt-4">
-  <FontAwesomeIcon icon={faUpload} class="w-5 h-5 me-2" /> Upload
+  <FontAwesomeIcon icon={faUpload} class="w-5 h-5 me-2" /> 업로드
 </Button>
 
+{#if uploadedImages.length > 0}
+  <div class="uploaded-images-container">
+    <h2>업로드된 이미지</h2>
+    <div class="scroll-arrows">
+      <button on:click={scrollLeft} class="scroll-button">
+        <FontAwesomeIcon icon={faChevronLeft} />
+      </button>
+      <div class="uploaded-images" bind:this={scrollContainer}>
+        {#each uploadedImages as uploadedImage}
+          <div class="uploaded-image-details">
+            <img src={uploadedImage.image} alt={uploadedImage.title} class="uploaded-image-size" />
+            <h3>{uploadedImage.title}</h3>
+          </div>
+        {/each}
+      </div>
+      <button on:click={scrollRight} class="scroll-button">
+        <FontAwesomeIcon icon={faChevronRight} />
+      </button>
+    </div>
+  </div>
+{/if}
+
 <style>
-  .image-details {
+  .image-details, .uploaded-image-details {
     display: flex;
-    flex-direction: column; /* Stack elements vertically */
-    align-items: flex-start; /* Align text to the left */
-    margin-top: 2rem; /* Add space between navigation and content */
+    flex-direction: column;
+    align-items: flex-start;
+    margin-top: 2rem;
   }
 
   .image-text {
-    margin-bottom: 1rem; /* Add space between text and image */
+    margin-bottom: 1rem;
   }
 
-  h1 {
-    font-size: 2rem; /* Increase font size */
-    font-weight: bold; /* Bold text */
+  h1, h2, h3 {
+    font-size: 2rem;
+    font-weight: bold;
   }
 
   .image-and-description {
     display: flex;
-    align-items: flex-start; /* Align the image and description to the top */
-    gap: 1rem; /* Add space between the image and the description */
-    width: 100%; /* Ensure the container takes the full width */
+    align-items: flex-start;
+    gap: 1rem;
+    width: 100%;
   }
 
   .image-size {
-    flex: 1; /* Allow the image to take up available space */
-    height: 800px; /* Set the height of the image */
-    object-fit: cover; /* Ensure the image covers the allocated space */
+    flex: 1;
+    height: 800px;
+    object-fit: cover;
   }
 
   .image-description {
@@ -108,9 +182,51 @@
   }
 
   .map {
-    height: 300px; /* Set the height of the map */
-    min-width: 300px; /* Set the minimum width of the map */
-    width: 100%; /* Ensure the map takes the full width */
-    margin-top: 1rem; /* Add space between the description and the map */
+    height: 300px;
+    min-width: 300px;
+    width: 100%;
+    margin-top: 1rem;
+  }
+
+  .uploaded-images-container {
+    margin-top: 2rem;
+    position: relative;
+  }
+
+  .uploaded-images {
+    display: flex;
+    flex-direction: row;
+    overflow-x: auto;
+    gap: 1rem;
+    scroll-behavior: smooth;
+  }
+
+  .uploaded-image-details {
+    flex: 0 0 auto;
+    width: 300px;
+    text-align: center; /* Center the title */
+  }
+
+  .uploaded-image-size {
+    width: 100%;
+    height: 200px;
+    object-fit: cover;
+  }
+
+  .scroll-arrows {
+    display: flex;
+    align-items: center;
+  }
+
+  .scroll-button {
+    background-color: transparent;
+    border: none;
+    cursor: pointer;
+    font-size: 2rem;
+    margin: 0 0.5rem;
+  }
+
+  .scroll-button:focus {
+    outline: none;
   }
 </style>

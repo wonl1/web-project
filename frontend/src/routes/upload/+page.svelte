@@ -1,6 +1,6 @@
 <script>
-  import { goto } from '$app/navigation';
   import { onMount } from 'svelte';
+  import { goto } from '$app/navigation';
 
   let file;
   let fileName = '';
@@ -31,6 +31,7 @@
       fileName = file.name;
       const reader = new FileReader();
       reader.onload = (e) => {
+        // 수정된 부분: 이미지 경로 설정
         imagePreview = e.target.result;
       };
       reader.readAsDataURL(file);
@@ -53,13 +54,15 @@
 
     try {
       isUploading = true;
-      const response = await fetch('/api/upload', {
+      const response = await fetch('http://127.0.0.1:8007/api/upload/', {
         method: 'POST',
         body: formData
       });
 
       if (!response.ok) {
-        throw new Error('파일 업로드에 실패했습니다.');
+        const errorData = await response.json();
+        const errorMessages = errorData.map(err => err.msg).join(', ');
+        throw new Error(errorMessages);
       }
 
       const data = await response.json();
@@ -72,6 +75,51 @@
     }
   }
 </script>
+
+<div class="upload-container">
+  <h1 class="text-2xl font-bold mb-4">이미지 업로드</h1>
+  <form on:submit|preventDefault={handleUpload}>
+    {#if errorMessage}
+      <p class="error-message">{errorMessage}</p>
+    {/if}
+
+    <div class="file-input-container">
+      <label for="file-input" class="file-input-label">이미지 선택</label>
+      {#if fileName}
+        <span class="file-name">{fileName}</span>
+      {/if}
+    </div>
+    <input id="file-input" type="file" accept="image/*" on:change={handleFileChange} class="file-input" />
+
+    {#if imagePreview}
+      <!-- 수정된 부분: 이미지 미리보기 -->
+      <img src={imagePreview} alt="업로드된 이미지 미리보기" class="image-preview" />
+    {/if}
+
+    <label for="title-input" class="block mb-2 text-lg font-medium text-gray-700">
+      제목
+    </label>
+    <input id="title-input" type="text" placeholder="제목을 입력하세요" bind:value={title} class="input-field" />
+      
+    <label for="date-input" class="block mb-2 text-lg font-medium text-gray-700">
+      찍은 날짜
+    </label>
+    <input id="date-input" type="date" bind:value={dateTaken} class="input-field" />
+
+    <label for="description-input" class="block mb-2 text-lg font-medium text-gray-700">
+      설명
+    </label>
+    <textarea id="description-input" placeholder="설명을 입력하세요" bind:value={description} class="input-field" rows="4"></textarea>
+
+    <button type="submit" class="font-bold bg-darkblue-600 text-lightyellow-100 hover:text-lightyellow-50 hover:bg-darkblue-500 px-4 py-2 rounded" disabled={isUploading}>
+      {#if isUploading}
+        <div class="loading-spinner"></div>
+      {:else}
+        업로드
+      {/if}
+    </button>
+  </form>
+</div>
 
 <style>
   .upload-container {
@@ -146,47 +194,3 @@
     color: gray;
   }
 </style>
-
-<div class="upload-container">
-  <h1 class="text-2xl font-bold mb-4">이미지 업로드</h1>
-  <form on:submit|preventDefault={handleUpload}>
-    {#if errorMessage}
-      <p class="error-message">{errorMessage}</p>
-    {/if}
-
-    <div class="file-input-container">
-      <label for="file-input" class="file-input-label">이미지 선택</label>
-      {#if fileName}
-        <span class="file-name">{fileName}</span>
-      {/if}
-    </div>
-    <input id="file-input" type="file" accept="image/*" on:change={handleFileChange} class="file-input" />
-
-    {#if imagePreview}
-      <img src={imagePreview} alt="업로드된 이미지 미리보기" class="image-preview" />
-    {/if}
-
-    <label for="title-input" class="block mb-2 text-lg font-medium text-gray-700">
-      제목
-    </label>
-    <input id="title-input" type="text" placeholder="제목을 입력하세요" bind:value={title} class="input-field" />
-      
-    <label for="date-input" class="block mb-2 text-lg font-medium text-gray-700">
-      찍은 날짜
-    </label>
-    <input id="date-input" type="date" bind:value={dateTaken} class="input-field" />
-
-    <label for="description-input" class="block mb-2 text-lg font-medium text-gray-700">
-      설명
-    </label>
-    <textarea id="description-input" placeholder="설명을 입력하세요" bind:value={description} class="input-field" rows="4"></textarea>
-
-    <button type="submit" class="font-bold bg-darkblue-600 text-lightyellow-100 hover:text-lightyellow-50 hover:bg-darkblue-500 px-4 py-2 rounded" disabled={isUploading}>
-      {#if isUploading}
-        <div class="loading-spinner"></div>
-      {:else}
-        업로드
-      {/if}
-    </button>
-  </form>
-</div>
