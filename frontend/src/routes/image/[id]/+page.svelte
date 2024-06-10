@@ -3,6 +3,7 @@
   import { page } from '$app/stores';
   import { goto } from '$app/navigation';
   import { Button } from 'flowbite-svelte';
+  import { P } from 'flowbite-svelte';
   import { FontAwesomeIcon } from '@fortawesome/svelte-fontawesome';
   import { faUpload, faChevronLeft, faChevronRight } from '@fortawesome/free-solid-svg-icons';
   import 'leaflet/dist/leaflet.css';
@@ -59,6 +60,15 @@
       uploadedImages.forEach(uploadedImage => {
         uploadedImage.image = `${backendImagePath}${uploadedImage.image.split('/').pop()}`;
       });
+
+      // Check if the current image is in the uploaded images list
+      const uploadedImage = uploadedImages.find(img => img.id === imageId);
+      if (uploadedImage) {
+        // If it is, update the current image data
+        image = uploadedImage;
+        image.image = `${backendImagePath}${image.image.split('/').pop()}`;
+        loadMap();
+      }
     } catch (error) {
       console.error(error);
       errorMessage = error.message;
@@ -115,9 +125,9 @@
     <div class="image-and-description">
       <img src={image.src || image.image} alt={image.alt || image.title} class="image-size" />
       <div class="image-description">
-        <p class="mb-3 text-gray-600 dark:text-gray-400" style="line-height: 1.2;">
+        <P class="mb-3" color="text-gray-600 dark:text-gray-400" firstupper style="line-height: 1.2;">
           {@html image.description}
-        </p>
+        </P>
       </div>
     </div>
     <div id="map" class="map"></div>

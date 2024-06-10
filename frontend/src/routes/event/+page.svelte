@@ -1,129 +1,123 @@
 <script>
-	import { onMount } from 'svelte';
-	import { tweened } from 'svelte/motion';
-	import { cubicOut } from 'svelte/easing';
+    import { onMount } from 'svelte';
+    import { Button } from 'flowbite-svelte';
+    import { FontAwesomeIcon } from '@fortawesome/svelte-fontawesome';
+    import { faVoteYea } from '@fortawesome/free-solid-svg-icons';
+    import { images } from '/bce/lectures/2024-web-application-programming/won51/web-project/frontend/src/routes/image/[id]/images.js';
   
-	// Utility function to get a random integer
-	function getRandomInt(min, max) {
-	  min = Math.ceil(min);
-	  max = Math.floor(max);
-	  return Math.floor(Math.random() * (max - min + 1)) + min;
-	}
+    let uploadedImages = []; 
+    let selectedImage = null;
+    let loading = true;
+    let errorMessage = '';
+    let votes = {};
   
-	let prizes = ["Prize 1", "Prize 2", "Prize 3", "Prize 4", "Prize 5", "Prize 6"];
-	let angle = tweened(0, { duration: 4000, easing: cubicOut });
-	let spinning = false;
-	let selectedPrize = null;
+    const backendImagePath = 'http://127.0.0.1:8007/media/images/';
   
-	function spin() {
-	  if (spinning) return;
+    async function fetchUploadedImages() {
+      try {
+        const response = await fetch(`http://127.0.0.1:8007/api/posts/`);
+        if (!response.ok) {
+          throw new Error('이미지 로드 중 오류가 발생했습니다.');
+        }
+        uploadedImages = await response.json();
   
-	  spinning = true;
-	  selectedPrize = null;
-	  let randomAngle = getRandomInt(1440, 2160); // Random angle between 4 to 6 full rotations
-	  angle.set(randomAngle).then(() => {
-		spinning = false;
-		let finalAngle = randomAngle % 360;
-		let prizeIndex = Math.floor(finalAngle / (360 / prizes.length));
-		selectedPrize = prizes[prizeIndex];
-	  });
-	}
+        uploadedImages.forEach(uploadedImage => {
+          uploadedImage.image = `${backendImagePath}${uploadedImage.image.split('/').pop()}`;
+        });
   
-	onMount(() => {
-	  angle.subscribe(value => {
-		document.querySelector(".wheel").style.transform = `rotate(${value}deg)`;
-	  });
-	});
-  </script>
+        loading = false;
+      } catch (error) {
+        console.error(error);
+        errorMessage = error.message;
+        loading = false;
+      }
+    }
   
-  <style>
-	.wheel-container {
-	  display: flex;
-	  flex-direction: column;
-	  align-items: center;
-	}
-	.wheel {
-	  width: 300px;
-	  height: 300px;
-	  border: 5px solid #333;
-	  border-radius: 50%;
-	  position: relative;
-	  overflow: hidden;
-	  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-	}
-	.wheel::before {
-	  content: "";
-	  position: absolute;
-	  top: 50%;
-	  left: 50%;
-	  width: 0;
-	  height: 0;
-	  border-left: 10px solid transparent;
-	  border-right: 10px solid transparent;
-	  border-bottom: 20px solid #333;
-	  transform: translate(-50%, -100%);
-	  z-index: 10;
-	}
-	.segment {
-	  position: absolute;
-	  width: 50%;
-	  height: 50%;
-	  background-color: #fff;
-	  transform-origin: 100% 100%;
-	  border-top-right-radius: 100%;
-	  border: 1px solid #333;
-	  clip-path: polygon(0% 0%, 100% 0%, 100% 100%);
-	}
-	.prize {
-	  position: absolute;
-	  width: 100%;
-	  text-align: center;
-	  top: 50%;
-	  left: 50%;
-	  transform: translate(-50%, -50%) rotate(90deg);
-	  font-size: 1rem;
-	  color: #333;
-	}
-	.pointer {
-	  width: 0;
-	  height: 0;
-	  border-left: 20px solid transparent;
-	  border-right: 20px solid transparent;
-	  border-bottom: 40px solid red;
-	  position: absolute;
-	  top: -50px;
-	}
-	.spin-button {
-	  margin-top: 20px;
-	  padding: 10px 20px;
-	  font-size: 1rem;
-	  cursor: pointer;
-	}
-	.spin-button:disabled {
-	  cursor: not-allowed;
-	}
-  </style>
+    onMount(() => {
+      fetchUploadedImages();
+    });
   
-  <div class="wheel-container">
-	<div class="pointer"></div>
-	<div class="wheel">
-	  {#each prizes as prize, index}
-		<div class="segment" style="transform: rotate({index * (360 / prizes.length)}deg)">
-		  <div class="prize" style="transform: rotate({index * -(360 / prizes.length)}deg)">
-			{prize}
+    function selectImage(image) {
+      selectedImage = image;
+    }
+  
+    function voteForImage() {
+      if (selectedImage) {
+        if (!votes[selectedImage.id]) {
+          votes[selectedImage.id] = 0;
+        }
+        votes[selectedImage.id]++;
+        alert(`투표 완료: ${selectedImage.title}`);
+        selectedImage = null;
+      }
+    }
+  
+    function handleKeydown(event, image) {
+      if (event.key === 'Enter') {
+        selectImage(image);
+      }
+    }
+</script>
+  
+{#if loading}
+    <p>Loading...</p>
+{:else if errorMessage}
+    <p>{errorMessage}</p>
+{:else}
+    <div class="vote-page">
+      <h2>이미지 투표하기</h2>
+      <div class="uploaded-images-gallery">
+        {#each uploadedImages as uploadedImage}
+		  <div class="uploaded-image-details {selectedImage === uploadedImage ? 'selected' : ''}" role="button" tabindex="0" on:click={() => selectImage(uploadedImage)} on:keydown={(event) => handleKeydown(event, uploadedImage)}>
+			<img src={uploadedImage.image} alt={uploadedImage.title} class="uploaded-image-size" />
+			<h3>{uploadedImage.title}</h3>
 		  </div>
-		</div>
-	  {/each}
-	</div>
-	<button class="spin-button" on:click={spin} disabled={spinning}>
-	  {#if spinning}
-		Spinning...
-	  {:else}
-		Spin
-	  {/if}
-	</button>
-	{#if selectedPrize}
-	  <h2>Congratulations! You won {selectedPrize}!</h2>
-	{/if}
-  </div>
+        {/each}
+      </div>
+      {#if selectedImage}
+        <div class="selected-image">
+          <h3>선택된 이미지: {selectedImage.title}</h3>
+          <Button on:click={voteForImage} class="font-bold bg-green-600 text-white hover:bg-green-500 mt-4">
+            <FontAwesomeIcon icon={faVoteYea} class="w-5 h-5 me-2" /> 투표하기
+          </Button>
+        </div>
+      {/if}
+    </div>
+{/if}
   
+<style>
+    .vote-page {
+      margin-top: 2rem;
+      text-align: center;
+    }
+  
+    .uploaded-images-gallery {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 1rem;
+      margin-top: 2rem;
+    }
+  
+    .uploaded-image-details {
+      flex: 0 0 auto;
+      width: 200px;
+      text-align: center; 
+      cursor: pointer;
+      border: 2px solid transparent;
+    }
+  
+    .uploaded-image-details.selected {
+      border-color: blue;
+    }
+  
+    .uploaded-image-size {
+      width: 100%;
+      height: 150px;
+      object-fit: cover;
+    }
+  
+    .selected-image {
+      margin-top: 2rem;
+    }
+</style>
