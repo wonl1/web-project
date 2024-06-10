@@ -31,7 +31,6 @@
       fileName = file.name;
       const reader = new FileReader();
       reader.onload = (e) => {
-        // 수정된 부분: 이미지 경로 설정
         imagePreview = e.target.result;
       };
       reader.readAsDataURL(file);
@@ -92,7 +91,7 @@
     <input id="file-input" type="file" accept="image/*" on:change={handleFileChange} class="file-input" />
 
     {#if imagePreview}
-      <!-- 수정된 부분: 이미지 미리보기 -->
+    
       <img src={imagePreview} alt="업로드된 이미지 미리보기" class="image-preview" />
     {/if}
 

@@ -9,12 +9,12 @@
 
   let imageId;
   let image;
-  let uploadedImages = []; // List of newly uploaded images
+  let uploadedImages = []; 
   let loading = true;
   let errorMessage = '';
   let scrollContainer;
 
-  // 이미지 엔드포인트를 백엔드의 경로로 설정합니다.
+
   const backendImagePath = 'http://127.0.0.1:8007/media/images/';
 
   $: {
@@ -36,12 +36,10 @@
         throw new Error('이미지 로드 중 오류가 발생했습니다.');
       }
       image = await response.json();
-      // 이미지의 경로를 백엔드에서 제공하는 경로로 수정합니다.
+
       image.image = `${backendImagePath}${image.image.split('/').pop()}`;
       loading = false;
-      onMount(() => {
-        loadMap();
-      });
+      loadMap();
     } catch (error) {
       console.error(error);
       errorMessage = error.message;
@@ -56,7 +54,7 @@
         throw new Error('이미지 로드 중 오류가 발생했습니다.');
       }
       uploadedImages = await response.json();
-      // 업로드된 이미지의 경로도 백엔드에서 제공하는 경로로 수정합니다.
+
       uploadedImages.forEach(uploadedImage => {
         uploadedImage.image = `${backendImagePath}${uploadedImage.image.split('/').pop()}`;
       });
@@ -66,8 +64,9 @@
     }
   }
 
-  function loadMap() {
-    import('leaflet').then(L => {
+  async function loadMap() {
+    if (typeof window !== 'undefined' && image) {
+      const L = await import('leaflet');
       const map = L.map('map').setView([image.lat, image.lng], 10);
       L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
         maxZoom: 19,
@@ -75,7 +74,7 @@
       L.marker([image.lat, image.lng]).addTo(map)
         .bindPopup(image.alt)
         .openPopup();
-    });
+    }
   }
 
   onMount(() => {
@@ -182,7 +181,7 @@
   }
 
   .map {
-    height: 300px;
+    height: 300px; 
     min-width: 300px;
     width: 100%;
     margin-top: 1rem;
@@ -204,7 +203,7 @@
   .uploaded-image-details {
     flex: 0 0 auto;
     width: 300px;
-    text-align: center; /* Center the title */
+    text-align: center; 
   }
 
   .uploaded-image-size {
