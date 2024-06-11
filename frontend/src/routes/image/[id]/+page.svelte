@@ -4,7 +4,7 @@
   import { goto } from '$app/navigation';
   import { Button, P } from 'flowbite-svelte';
   import { FontAwesomeIcon } from '@fortawesome/svelte-fontawesome';
-  import { faUpload, faChevronLeft, faChevronRight, faTrash } from '@fortawesome/free-solid-svg-icons';
+  import { faUpload, faChevronLeft, faChevronRight, faTimes } from '@fortawesome/free-solid-svg-icons';
   import 'leaflet/dist/leaflet.css';
   import { images } from './images.js';
   import './images.css';
@@ -66,25 +66,27 @@
   }
 
   async function deleteImage(id) {
-    console.log('Attempting to delete image with id:', id);
-    if (!id) {
-      console.error('Invalid ID for deletion:', id);
-      errorMessage = '유효하지 않은 이미지 ID입니다.';
-      return;
-    }
-
-    try {
-      const response = await fetch(`http://127.0.0.1:8007/api/posts/${id}/`, {
-        method: 'DELETE',
-      });
-      if (!response.ok) {
-        throw new Error('이미지 삭제 중 오류가 발생했습니다.');
+    if (confirm('이미지를 삭제하시겠습니까?')) {
+      console.log('Attempting to delete image with id:', id);
+      if (!id) {
+        console.error('Invalid ID for deletion:', id);
+        errorMessage = '유효하지 않은 이미지 ID입니다.';
+        return;
       }
-      uploadedImages = uploadedImages.filter(image => image.id !== id);
-      console.log('Remaining Uploaded Images after deletion:', uploadedImages);
-    } catch (error) {
-      console.error(error);
-      errorMessage = error.message;
+
+      try {
+        const response = await fetch(`http://127.0.0.1:8007/api/posts/${id}/`, {
+          method: 'DELETE',
+        });
+        if (!response.ok) {
+          throw new Error('이미지 삭제 중 오류가 발생했습니다.');
+        }
+        uploadedImages = uploadedImages.filter(image => image.id !== id);
+        console.log('Remaining Uploaded Images after deletion:', uploadedImages);
+      } catch (error) {
+        console.error(error);
+        errorMessage = error.message;
+      }
     }
   }
 
@@ -126,6 +128,7 @@
   }
 </script>
 
+
 {#if loading}
   <p>Loading...</p>
 {:else if errorMessage}
@@ -164,8 +167,8 @@
             <img src={uploadedImage.image} alt={uploadedImage.title} class="uploaded-image-size" />
             <h3>{uploadedImage.title}</h3>
             <Button on:click={() => deleteImage(uploadedImage.id)} 
-              class="font-bold bg-red-600 text-lightyellow-100 hover:text-lightyellow-50 hover:bg-red-500 mt-2 text-xs p-1">
-              <FontAwesomeIcon icon={faTrash} class="w-3 h-3 me-1" /> 삭제
+              class="delete-button font-bold bg-red-600 text-lightyellow-100 hover:text-lightyellow-50 hover:bg-red-500 mt-2 text-xs p-1">
+              <FontAwesomeIcon icon={faTimes}  />
             </Button>
           </div>
         {/each}
