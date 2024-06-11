@@ -166,9 +166,10 @@
           <div class="uploaded-image-details">
             <img src={uploadedImage.image} alt={uploadedImage.title} class="uploaded-image-size" />
             <h3>{uploadedImage.title}</h3>
-            <Button on:click={() => deleteImage(uploadedImage.id)} 
-              class="delete-button font-bold bg-red-600 text-lightyellow-100 hover:text-lightyellow-50 hover:bg-red-500 mt-2 text-xs p-1">
-              <FontAwesomeIcon icon={faTimes}  />
+            <Button 
+              on:click={() => deleteImage(uploadedImage.id)} 
+              class="delete-button font-bold bg-red-600 mt-2 mr-2 text-xs p-1 rounded-full flex items-center justify-center w-4 h-4">
+              <FontAwesomeIcon icon={faTimes} />
             </Button>
           </div>
         {/each}

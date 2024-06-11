@@ -64,7 +64,7 @@
     <p>{errorMessage}</p>
 {:else}
     <div class="vote-page">
-      <h2>이미지 투표하기</h2>
+      <h2>Best Photo Vote</h2>
       <div class="uploaded-images-gallery">
         {#each uploadedImages as uploadedImage}
 		  <div class="uploaded-image-details {selectedImage === uploadedImage ? 'selected' : ''}" role="button" tabindex="0" on:click={() => selectImage(uploadedImage)} on:keydown={(event) => handleKeydown(event, uploadedImage)}>

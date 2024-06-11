@@ -67,11 +67,14 @@
   .card {
     flex: 1 1 calc(25% - 1rem); /* Adjust width to fit 4 cards in a row with a gap */
     min-width: 250px;
+    max-width: 400px; /* Ensures cards do not exceed a reasonable size */
     border: 1px solid #e5e7eb;
     border-radius: 0.5rem;
     overflow: hidden;
     background-color: white;
     transition: transform 0.2s;
+    display: flex;
+    flex-direction: column;
   }
 
   .card:hover {
@@ -80,15 +83,16 @@
 
   .card-img {
     width: 100%;
-    height: 40%;
+    height: 200px; /* Fixed height to ensure uniformity */
     object-fit: cover;
   }
 
   .card-content {
+    flex: 1;
     padding: 1rem;
     display: flex;
     flex-direction: column;
-    justify-content: center;
+    justify-content: flex-start;
   }
 
   .card-title {
@@ -101,6 +105,7 @@
   .card-description {
     font-size: 0.875rem;
     color: #6b7280;
+    flex: 1;
   }
 
   .cursor-pointer {

@@ -7,7 +7,7 @@
 </script>
 
 <div class="flex flex-col min-h-screen">
-  <Navbar class="bg-darkblue-600 rounded-t-lg flex items-center" style="height: 100px;">
+  <Navbar class="bg-darkblue-600 rounded-t-lg flex items-center" style="height: 100px; margin-bottom: 16px;"> 
     <NavBrand href="/">
       <FontAwesomeIcon icon={faCamera} size="2x" style="margin-right: 8px;" class="text-lightyellow-100" /> 
       <span class="self-center whitespace-nowrap text-2xl font-semibold text-lightyellow-100">Travel Sharing</span>
