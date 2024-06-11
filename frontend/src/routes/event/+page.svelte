@@ -64,7 +64,7 @@
     <p>{errorMessage}</p>
 {:else}
     <div class="vote-page">
-      <h2>Best Photo Vote</h2>
+      <h2>VOTE</h2>
       <div class="uploaded-images-gallery">
         {#each uploadedImages as uploadedImage}
 		  <div class="uploaded-image-details {selectedImage === uploadedImage ? 'selected' : ''}" role="button" tabindex="0" on:click={() => selectImage(uploadedImage)} on:keydown={(event) => handleKeydown(event, uploadedImage)}>
@@ -75,9 +75,9 @@
       </div>
       {#if selectedImage}
         <div class="selected-image">
-          <h3>선택된 이미지: {selectedImage.title}</h3>
+          <h3>Selected: {selectedImage.title}</h3>
           <Button on:click={voteForImage} class="font-bold bg-green-600 text-white hover:bg-green-500 mt-4">
-            <FontAwesomeIcon icon={faVoteYea} class="w-5 h-5 me-2" /> 투표하기
+            <FontAwesomeIcon icon={faVoteYea} class="w-5 h-5 me-2" /> VOTE
           </Button>
         </div>
       {/if}

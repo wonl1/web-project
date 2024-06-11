@@ -65,7 +65,8 @@
       }
 
       const data = await response.json();
-      goto(`/image/${data.id}`);
+      // Return to the previous page after successful upload
+      history.back();
     } catch (error) {
       console.error('파일 업로드 중 오류 발생:', error);
       errorMessage = error.message;
@@ -91,7 +92,6 @@
     <input id="file-input" type="file" accept="image/*" on:change={handleFileChange} class="file-input" />
 
     {#if imagePreview}
-    
       <img src={imagePreview} alt="업로드된 이미지 미리보기" class="image-preview" />
     {/if}
 

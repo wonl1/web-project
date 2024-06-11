@@ -1,24 +1,22 @@
 <script>
   import "../app.pcss";
-  import { Navbar, NavBrand, NavLi, NavUl, NavHamburger } from 'flowbite-svelte';
   import { FontAwesomeIcon } from '@fortawesome/svelte-fontawesome';
   import { faCamera } from '@fortawesome/free-solid-svg-icons';
   import { Footer, FooterCopyright, FooterLinkGroup, FooterLink } from 'flowbite-svelte';
 </script>
 
 <div class="flex flex-col min-h-screen">
-  <Navbar class="bg-darkblue-600 rounded-t-lg flex items-center" style="height: 100px; margin-bottom: 16px;"> 
-    <NavBrand href="/">
-      <FontAwesomeIcon icon={faCamera} size="2x" style="margin-right: 8px;" class="text-lightyellow-100" /> 
+  <nav class="bg-darkblue-600 rounded-t-lg flex items-center justify-between px-4 sm:px-20" style="height: 100px; margin-bottom: 16px;">
+    <a href="/" class="flex items-center mx-2 sm:mx-10">
+      <FontAwesomeIcon icon={faCamera} size="2x" style="margin-right: 8px;" class="text-lightyellow-100" />
       <span class="self-center whitespace-nowrap text-2xl font-semibold text-lightyellow-100">Travel Sharing</span>
-    </NavBrand>
-    <NavHamburger class="text-lightyellow-100 hover:text-lightyellow-50 hover:bg-darkblue-600"/>
-    <NavUl>
-      <NavLi href="/" class="text-lightyellow-100 hover:text-lightyellow-50 bg-darkblue-600 hover:bg-darkblue-500 font-bold">Home</NavLi>
-      <NavLi href="/category" class="text-lightyellow-100 hover:text-lightyellow-50 bg-darkblue-600 hover:bg-darkblue-500 font-bold">Category</NavLi>
-      <NavLi href="/event" class="text-lightyellow-100 hover:text-lightyellow-50 bg-darkblue-600 hover:bg-darkblue-500 font-bold">Event</NavLi>
-    </NavUl>
-  </Navbar>
+    </a>
+    <div class="flex space-x-2 sm:space-x-4 mx-2 sm:mx-10">
+      <a href="/" class="text-lightyellow-100 hover:text-lightyellow-50 bg-darkblue-600 hover:bg-darkblue-500 font-bold p-2">Home</a>
+      <a href="/category" class="text-lightyellow-100 hover:text-lightyellow-50 bg-darkblue-600 hover:bg-darkblue-500 font-bold p-2">Category</a>
+      <a href="/event" class="text-lightyellow-100 hover:text-lightyellow-50 bg-darkblue-600 hover:bg-darkblue-500 font-bold p-2">Event</a>
+    </div>
+  </nav>
   <div class="px-2 sm:px-4 flex-grow">
     <div class="container mx-auto">
       <slot></slot>

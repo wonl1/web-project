@@ -16,6 +16,7 @@
   let errorMessage = '';
   let scrollContainer;
   let L;
+  let selectedImageDetails = null; // 추가된 변수
 
   const backendImagePath = 'http://127.0.0.1:8007/media/images/';
 
@@ -90,6 +91,20 @@
     }
   }
 
+  async function showImageDetails(id) {
+    try {
+      const response = await fetch(`http://127.0.0.1:8007/api/posts/${id}`);
+      if (!response.ok) {
+        throw new Error('이미지 로드 중 오류가 발생했습니다.');
+      }
+      selectedImageDetails = await response.json();
+      selectedImageDetails.image = `${backendImagePath}${selectedImageDetails.image.split('/').pop()}`;
+    } catch (error) {
+      console.error(error);
+      errorMessage = error.message;
+    }
+  }
+
   function loadMap() {
     if (typeof window !== 'undefined' && image && L) {
       const map = L.map('map').setView([image.lat, image.lng], 10);
@@ -138,9 +153,9 @@
     <div class="image-text">
       <h1>{image.alt || image.title}</h1>
     </div>
-    <div class="image-and-description">
-      <img src={image.src || image.image} alt={image.alt || image.title} class="image-size" />
-      <div class="image-description">
+    <div class="image-and-description flex flex-col sm:flex-row">
+      <img src={image.src || image.image} alt={image.alt || image.title} class="image-size sm:w-1/2" />
+      <div class="image-description  sm:w-1/2">
         <P class="mb-3" color="text-gray-600 dark:text-gray-400" firstupper style="line-height: 1.2;">
           {@html image.description}
         </P>
@@ -150,25 +165,27 @@
   </div>
 {/if}
 
-<Button on:click={navigateToUploadPage} class="font-bold bg-darkblue-600 text-lightyellow-100 hover:text-lightyellow-50 hover:bg-darkblue-500 mt-4">
-  <FontAwesomeIcon icon={faUpload} class="w-5 h-5 me-2" /> 업로드
-</Button>
-
 {#if uploadedImages.length > 0}
-  <div class="uploaded-images-container">
-    <h2>업로드된 이미지</h2>
+  <div class="uploaded-images-container mb-10">
+    <div class="flex items-center justify-between">
+      <h2>Uploaded Images</h2>
+      <Button on:click={navigateToUploadPage} class="font-bold bg-darkblue-600 text-lightyellow-100 hover:text-lightyellow-50 hover:bg-darkblue-500">
+        <FontAwesomeIcon icon={faUpload} class="w-5 h-5 me-2" /> Upload
+      </Button>
+    </div>
     <div class="scroll-arrows">
       <button on:click={scrollLeft} class="scroll-button">
         <FontAwesomeIcon icon={faChevronLeft} />
       </button>
       <div class="uploaded-images" bind:this={scrollContainer}>
         {#each uploadedImages as uploadedImage, i}
-          <div class="uploaded-image-details">
-            <img src={uploadedImage.image} alt={uploadedImage.title} class="uploaded-image-size" />
-            <h3>{uploadedImage.title}</h3>
+          <div class="uploaded-image-details flex flex-col items-center">
+            <button type="button" on:click={() => showImageDetails(uploadedImage.id)} class="uploaded-image-button">
+              <img src={uploadedImage.image} alt={uploadedImage.title} class="uploaded-image-size" />
+            </button>
             <Button 
               on:click={() => deleteImage(uploadedImage.id)} 
-              class="delete-button font-bold bg-red-600 mt-2 mr-2 text-xs p-1 rounded-full flex items-center justify-center w-4 h-4">
+              class="delete-button font-bold bg-darkblue-300 mt-2 mr-2 text-xs p-1 rounded-full flex items-center justify-center w-4 h-4">
               <FontAwesomeIcon icon={faTimes} />
             </Button>
           </div>
@@ -177,6 +194,18 @@
       <button on:click={scrollRight} class="scroll-button">
         <FontAwesomeIcon icon={faChevronRight} />
       </button>
+    </div>
+  </div>
+{/if}
+
+{#if selectedImageDetails}
+  <div class="modal" style="z-index: 1000;">
+    <div class="modal-content">
+      <h2>{selectedImageDetails.title}</h2>
+      <img src={selectedImageDetails.image} alt={selectedImageDetails.title} />
+      <p>{selectedImageDetails.content}</p>
+      <p>{new Date(selectedImageDetails.date).toLocaleDateString()}</p>
+      <Button on:click={() => selectedImageDetails = null} class="bg-black text-white">Close</Button>
     </div>
   </div>
 {/if}

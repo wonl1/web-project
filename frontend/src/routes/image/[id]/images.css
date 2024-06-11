@@ -72,7 +72,7 @@
     background-color: transparent;
     border: none;
     cursor: pointer;
-    font-size: 2rem;
+    font-size: 1rem;
     margin: 0 0.5rem;
   }
   
@@ -82,10 +82,34 @@
   
   .uploaded-image-details {
     position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
   }
   
   .delete-button {
     position: absolute;
     top: 0;
     right: 0;
+  }
+
+  .modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  .modal-content {
+    background: white;
+    padding: 20px;
+    border-radius: 20px;
+    max-width: 10000px;
+    max-height: 10000px;
+    width: auto;
+    height: auto;
   }
