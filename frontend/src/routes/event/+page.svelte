@@ -3,8 +3,7 @@
     import { Button } from 'flowbite-svelte';
     import { FontAwesomeIcon } from '@fortawesome/svelte-fontawesome';
     import { faVoteYea } from '@fortawesome/free-solid-svg-icons';
-    import { images } from '/bce/lectures/2024-web-application-programming/won51/web-project/frontend/src/routes/image/[id]/images.js';
-  
+    
     let uploadedImages = []; 
     let selectedImage = null;
     let loading = true;

@@ -5,3 +5,6 @@ class Post(models.Model):
     content = models.TextField()
     image = models.ImageField(upload_to='images/')
     date = models.DateField()
+
+    def __str__(self):
+        return self.title

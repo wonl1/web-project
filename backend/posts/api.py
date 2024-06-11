@@ -28,3 +28,9 @@ def get_post(request, post_id: int):
 def list_posts(request):
     posts = Post.objects.all()
     return posts
+
+@api.delete("/posts/{post_id}/")
+def delete_post(request, post_id: int):
+    post = get_object_or_404(Post, id=post_id)
+    post.delete()
+    return {"success": True}

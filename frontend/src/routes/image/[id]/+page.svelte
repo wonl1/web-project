@@ -2,16 +2,16 @@
   import { onMount } from 'svelte';
   import { page } from '$app/stores';
   import { goto } from '$app/navigation';
-  import { Button } from 'flowbite-svelte';
-  import { P } from 'flowbite-svelte';
+  import { Button, P } from 'flowbite-svelte';
   import { FontAwesomeIcon } from '@fortawesome/svelte-fontawesome';
-  import { faUpload, faChevronLeft, faChevronRight } from '@fortawesome/free-solid-svg-icons';
+  import { faUpload, faChevronLeft, faChevronRight, faTrash } from '@fortawesome/free-solid-svg-icons';
   import 'leaflet/dist/leaflet.css';
   import { images } from './images.js';
+  import './images.css';
 
   let imageId;
   let image;
-  let uploadedImages = []; 
+  let uploadedImages = [];
   let loading = true;
   let errorMessage = '';
   let scrollContainer;
@@ -38,7 +38,6 @@
         throw new Error('이미지 로드 중 오류가 발생했습니다.');
       }
       image = await response.json();
-
       image.image = `${backendImagePath}${image.image.split('/').pop()}`;
       loading = false;
       loadMap();
@@ -56,19 +55,33 @@
         throw new Error('이미지 로드 중 오류가 발생했습니다.');
       }
       uploadedImages = await response.json();
-
       uploadedImages.forEach(uploadedImage => {
         uploadedImage.image = `${backendImagePath}${uploadedImage.image.split('/').pop()}`;
       });
+      console.log('Uploaded Images:', uploadedImages);
+    } catch (error) {
+      console.error(error);
+      errorMessage = error.message;
+    }
+  }
 
-      // Check if the current image is in the uploaded images list
-      const uploadedImage = uploadedImages.find(img => img.id === imageId);
-      if (uploadedImage) {
-        // If it is, update the current image data
-        image = uploadedImage;
-        image.image = `${backendImagePath}${image.image.split('/').pop()}`;
-        loadMap();
+  async function deleteImage(id) {
+    console.log('Attempting to delete image with id:', id);
+    if (!id) {
+      console.error('Invalid ID for deletion:', id);
+      errorMessage = '유효하지 않은 이미지 ID입니다.';
+      return;
+    }
+
+    try {
+      const response = await fetch(`http://127.0.0.1:8007/api/posts/${id}/`, {
+        method: 'DELETE',
+      });
+      if (!response.ok) {
+        throw new Error('이미지 삭제 중 오류가 발생했습니다.');
       }
+      uploadedImages = uploadedImages.filter(image => image.id !== id);
+      console.log('Remaining Uploaded Images after deletion:', uploadedImages);
     } catch (error) {
       console.error(error);
       errorMessage = error.message;
@@ -146,10 +159,14 @@
         <FontAwesomeIcon icon={faChevronLeft} />
       </button>
       <div class="uploaded-images" bind:this={scrollContainer}>
-        {#each uploadedImages as uploadedImage}
+        {#each uploadedImages as uploadedImage, i}
           <div class="uploaded-image-details">
             <img src={uploadedImage.image} alt={uploadedImage.title} class="uploaded-image-size" />
             <h3>{uploadedImage.title}</h3>
+            <Button on:click={() => deleteImage(uploadedImage.id)} 
+              class="font-bold bg-red-600 text-lightyellow-100 hover:text-lightyellow-50 hover:bg-red-500 mt-2 text-xs p-1">
+              <FontAwesomeIcon icon={faTrash} class="w-3 h-3 me-1" /> 삭제
+            </Button>
           </div>
         {/each}
       </div>
@@ -159,87 +176,3 @@
     </div>
   </div>
 {/if}
-
-<style>
-  .image-details, .uploaded-image-details {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    margin-top: 2rem;
-  }
-
-  .image-text {
-    margin-bottom: 1rem;
-  }
-
-  h1, h2, h3 {
-    font-size: 2rem;
-    font-weight: bold;
-  }
-
-  .image-and-description {
-    display: flex;
-    align-items: flex-start;
-    gap: 1rem;
-    width: 100%;
-  }
-
-  .image-size {
-    flex: 1;
-    height: 800px;
-    object-fit: cover;
-  }
-
-  .image-description {
-    flex: 1;
-  }
-
-  .map {
-    height: 300px; 
-    min-width: 300px;
-    width: 100%;
-    margin-top: 1rem;
-  }
-
-  .uploaded-images-container {
-    margin-top: 2rem;
-    position: relative;
-  }
-
-  .uploaded-images {
-    display: flex;
-    flex-direction: row;
-    overflow-x: auto;
-    gap: 1rem;
-    scroll-behavior: smooth;
-  }
-
-  .uploaded-image-details {
-    flex: 0 0 auto;
-    width: 300px;
-    text-align: center; 
-  }
-
-  .uploaded-image-size {
-    width: 100%;
-    height: 200px;
-    object-fit: cover;
-  }
-
-  .scroll-arrows {
-    display: flex;
-    align-items: center;
-  }
-
-  .scroll-button {
-    background-color: transparent;
-    border: none;
-    cursor: pointer;
-    font-size: 2rem;
-    margin: 0 0.5rem;
-  }
-
-  .scroll-button:focus {
-    outline: none;
-  }
-</style>
