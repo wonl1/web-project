@@ -140,4 +140,11 @@
     font-size: 20px;
     font-weight: bold;
   }
+
+  .vote-page {
+    margin-top: 2rem;
+    margin-bottom: 2rem;
+    text-align: center;
+  }
+
 </style>
