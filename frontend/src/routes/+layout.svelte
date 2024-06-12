@@ -9,7 +9,7 @@
   <nav class="bg-darkblue-600 rounded-t-lg flex items-center justify-between px-4 sm:px-20" style="height: 100px; margin-bottom: 16px;">
     <a href="/" class="flex items-center mx-2 sm:mx-10">
       <FontAwesomeIcon icon={faCamera} size="2x" style="margin-right: 8px;" class="text-lightyellow-100" />
-      <span class="self-center whitespace-nowrap text-2xl font-semibold text-lightyellow-100">Travel Sharing</span>
+      <span class="self-center whitespace-nowrap text-2xl font-semibold text-lightyellow-100">Travel Share</span>
     </a>
     <div class="flex space-x-2 sm:space-x-4 mx-2 sm:mx-10">
       <a href="/" class="text-lightyellow-100 hover:text-lightyellow-50 bg-darkblue-600 hover:bg-darkblue-500 font-bold p-2">Home</a>
@@ -27,7 +27,7 @@
     <div class="sm:flex sm:items-center sm:justify-between px-20 py-2">
       <div class="flex items-center justify-center"> 
         <FontAwesomeIcon icon={faCamera} size="2x" style="margin-right: 8px;" /> 
-        <span class="self-center whitespace-nowrap text-xl font-semibold text-gray-400">Travel Sharing</span>
+        <span class="self-center whitespace-nowrap text-xl font-semibold text-gray-400">Travel Share</span>
       </div>
       <FooterLinkGroup ulClass="flex flex-wrap items-center justify-center mb-6 text-sm text-gray-400 sm:mb-0 dark:text-gray-400">
         <FooterLink href="/">About</FooterLink>

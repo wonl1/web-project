@@ -203,8 +203,8 @@
     <div class="modal-content">
       <h2>{selectedImageDetails.title}</h2>
       <img src={selectedImageDetails.image} alt={selectedImageDetails.title} style="max-width: 300px; max-height: 300px; object-fit: cover;" />
-      <p>{selectedImageDetails.content}</p>
       <p>{new Date(selectedImageDetails.date).toLocaleDateString()}</p>
+      <p>{selectedImageDetails.content}</p>
       <Button on:click={() => selectedImageDetails = null} class="bg-black text-white">Close</Button>
     </div>
   </div>

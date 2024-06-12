@@ -41,7 +41,7 @@
 
   async function handleUpload() {
     if (!file || !title || !description || !dateTaken) {
-      errorMessage = '모든 필드를 채워주세요.';
+      errorMessage = 'Please fill in all fields.';
       return;
     }
 
@@ -68,7 +68,7 @@
       // Return to the previous page after successful upload
       history.back();
     } catch (error) {
-      console.error('파일 업로드 중 오류 발생:', error);
+      console.error('Error uploading file:', error);
       errorMessage = error.message;
     } finally {
       isUploading = false;
@@ -77,14 +77,14 @@
 </script>
 
 <div class="upload-container">
-  <h1 class="text-2xl font-bold mb-4">이미지 업로드</h1>
+  <h1 class="text-2xl font-bold mb-4">Upload an image</h1>
   <form on:submit|preventDefault={handleUpload}>
     {#if errorMessage}
       <p class="error-message">{errorMessage}</p>
     {/if}
 
     <div class="file-input-container">
-      <label for="file-input" class="file-input-label">이미지 선택</label>
+      <label for="file-input" class="file-input-label">Select an image</label>
       {#if fileName}
         <span class="file-name">{fileName}</span>
       {/if}
@@ -92,29 +92,29 @@
     <input id="file-input" type="file" accept="image/*" on:change={handleFileChange} class="file-input" />
 
     {#if imagePreview}
-      <img src={imagePreview} alt="업로드된 이미지 미리보기" class="image-preview" />
+      <img src={imagePreview} alt="Preview uploaded images" class="image-preview" />
     {/if}
 
     <label for="title-input" class="block mb-2 text-lg font-medium text-gray-700">
-      제목
+      Title
     </label>
-    <input id="title-input" type="text" placeholder="제목을 입력하세요" bind:value={title} class="input-field" />
+    <input id="title-input" type="text" placeholder="Please enter a title" bind:value={title} class="input-field" />
       
     <label for="date-input" class="block mb-2 text-lg font-medium text-gray-700">
-      찍은 날짜
+      Date of photographing
     </label>
     <input id="date-input" type="date" bind:value={dateTaken} class="input-field" />
 
     <label for="description-input" class="block mb-2 text-lg font-medium text-gray-700">
-      설명
+      Content
     </label>
-    <textarea id="description-input" placeholder="설명을 입력하세요" bind:value={description} class="input-field" rows="4"></textarea>
+    <textarea id="description-input" placeholder="Please enter the content" bind:value={description} class="input-field" rows="4"></textarea>
 
     <button type="submit" class="font-bold bg-darkblue-600 text-lightyellow-100 hover:text-lightyellow-50 hover:bg-darkblue-500 px-4 py-2 rounded" disabled={isUploading}>
       {#if isUploading}
         <div class="loading-spinner"></div>
       {:else}
-        업로드
+        Upload
       {/if}
     </button>
   </form>
