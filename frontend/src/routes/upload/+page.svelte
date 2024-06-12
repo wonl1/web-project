@@ -53,7 +53,7 @@
 
     try {
       isUploading = true;
-      const response = await fetch('http://127.0.0.1:8007/api/upload/', {
+      const response = await fetch('http://127.0.0.1:8017/api/upload/', {
         method: 'POST',
         body: formData
       });

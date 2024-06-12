@@ -18,7 +18,7 @@
   let L;
   let selectedImageDetails = null; // 추가된 변수
 
-  const backendImagePath = 'http://127.0.0.1:8007/media/images/';
+  const backendImagePath = 'http://127.0.0.1:8017/media/images/';
 
   $: {
     imageId = $page.params.id;
@@ -34,7 +34,7 @@
 
   async function fetchImage() {
     try {
-      const response = await fetch(`http://127.0.0.1:8007/api/posts/${imageId}`);
+      const response = await fetch(`http://127.0.0.1:8017/api/posts/${imageId}`);
       if (!response.ok) {
         throw new Error('이미지 로드 중 오류가 발생했습니다.');
       }
@@ -51,7 +51,7 @@
 
   async function fetchUploadedImages() {
     try {
-      const response = await fetch(`http://127.0.0.1:8007/api/posts/`);
+      const response = await fetch(`http://127.0.0.1:8017/api/posts/`);
       if (!response.ok) {
         throw new Error('이미지 로드 중 오류가 발생했습니다.');
       }
@@ -76,7 +76,7 @@
       }
 
       try {
-        const response = await fetch(`http://127.0.0.1:8007/api/posts/${id}/`, {
+        const response = await fetch(`http://127.0.0.1:8017/api/posts/${id}/`, {
           method: 'DELETE',
         });
         if (!response.ok) {
@@ -93,7 +93,7 @@
 
   async function showImageDetails(id) {
     try {
-      const response = await fetch(`http://127.0.0.1:8007/api/posts/${id}`);
+      const response = await fetch(`http://127.0.0.1:8017/api/posts/${id}`);
       if (!response.ok) {
         throw new Error('이미지 로드 중 오류가 발생했습니다.');
       }

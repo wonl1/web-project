@@ -34,3 +34,13 @@ def delete_post(request, post_id: int):
     post = get_object_or_404(Post, id=post_id)
     post.delete()
     return {"success": True}
+
+@api.put("/posts/{post_id}/vote/")
+def vote(request, post_id: int):
+    try:
+        post = Post.objects.get(id=post_id)
+    except Post.DoesNotExist:
+        return {"error": "Post not found"}
+
+    post.vote()
+    return {"votes": post.votes}
