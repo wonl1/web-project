@@ -67,10 +67,11 @@
       <h2>VOTE</h2>
       <div class="uploaded-images-gallery">
         {#each uploadedImages as uploadedImage}
-		  <div class="uploaded-image-details {selectedImage === uploadedImage ? 'selected' : ''}" role="button" tabindex="0" on:click={() => selectImage(uploadedImage)} on:keydown={(event) => handleKeydown(event, uploadedImage)}>
-			<img src={uploadedImage.image} alt={uploadedImage.title} class="uploaded-image-size" />
-			<h3>{uploadedImage.title}</h3>
-		  </div>
+          <div class="uploaded-image-details {selectedImage === uploadedImage ? 'selected' : ''}" role="button" tabindex="0" on:click={() => selectImage(uploadedImage)} on:keydown={(event) => handleKeydown(event, uploadedImage)}>
+            <img src={uploadedImage.image} alt={uploadedImage.title} class="uploaded-image-size" />
+            <h3>{uploadedImage.title}</h3>
+            <p>투표 수: {votes[uploadedImage.id] || 0}</p> <!-- 투표 수를 표시합니다 -->
+          </div>
         {/each}
       </div>
       {#if selectedImage}
