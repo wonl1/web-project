@@ -18,7 +18,7 @@
           const response = await fetch(`http://127.0.0.1:8017/api/posts/`);
           if (!response.ok) {
               const serverMessage = await response.text();
-              throw new Error(`이미지 로드 중 오류가 발생했습니다: ${serverMessage}`);
+              throw new Error(`An error occurred loading the image: ${serverMessage}`);
           }
           uploadedImages = await response.json();
 
@@ -50,6 +50,10 @@
   }
 
   async function voteForImage(image) {
+    if (!confirm("Do you want to vote?")) {
+      return;
+    }
+
     const response = await fetch(`http://127.0.0.1:8017/api/posts/${image.id}/vote/`, {
         method: 'PUT',
     });

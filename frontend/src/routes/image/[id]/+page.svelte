@@ -16,7 +16,7 @@
   let errorMessage = '';
   let scrollContainer;
   let L;
-  let selectedImageDetails = null; // 추가된 변수
+  let selectedImageDetails = null; 
 
   const backendImagePath = 'http://127.0.0.1:8017/media/images/';
 
@@ -36,7 +36,7 @@
     try {
       const response = await fetch(`http://127.0.0.1:8017/api/posts/${imageId}`);
       if (!response.ok) {
-        throw new Error('이미지 로드 중 오류가 발생했습니다.');
+        throw new Error('An error occurred while loading the image.');
       }
       image = await response.json();
       image.image = `${backendImagePath}${image.image.split('/').pop()}`;
@@ -53,7 +53,7 @@
     try {
       const response = await fetch(`http://127.0.0.1:8017/api/posts/`);
       if (!response.ok) {
-        throw new Error('이미지 로드 중 오류가 발생했습니다.');
+        throw new Error('An error occurred while loading the image.');
       }
       uploadedImages = await response.json();
       uploadedImages.forEach(uploadedImage => {
@@ -67,11 +67,11 @@
   }
 
   async function deleteImage(id) {
-    if (confirm('이미지를 삭제하시겠습니까?')) {
+    if (confirm('Are you sure you want to delete the image?')) {
       console.log('Attempting to delete image with id:', id);
       if (!id) {
         console.error('Invalid ID for deletion:', id);
-        errorMessage = '유효하지 않은 이미지 ID입니다.';
+        errorMessage = 'Invalid image ID.';
         return;
       }
 
@@ -80,7 +80,7 @@
           method: 'DELETE',
         });
         if (!response.ok) {
-          throw new Error('이미지 삭제 중 오류가 발생했습니다.');
+          throw new Error('An error occurred while deleting the image.');
         }
         uploadedImages = uploadedImages.filter(image => image.id !== id);
         console.log('Remaining Uploaded Images after deletion:', uploadedImages);
@@ -95,7 +95,7 @@
     try {
       const response = await fetch(`http://127.0.0.1:8017/api/posts/${id}`);
       if (!response.ok) {
-        throw new Error('이미지 로드 중 오류가 발생했습니다.');
+        throw new Error('An error occurred while loading the image.');
       }
       selectedImageDetails = await response.json();
       selectedImageDetails.image = `${backendImagePath}${selectedImageDetails.image.split('/').pop()}`;
@@ -123,7 +123,7 @@
       L = module.default;
     }
     if (!image) {
-      console.error('이미지를 찾을 수 없습니다.', imageId);
+      console.error('Image not found.', imageId);
     } else if (!loading) {
       loadMap();
     }
